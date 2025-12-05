@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { hover } from '../../shared/styles/hover';
+import { active } from '../../shared/styles/active';
 
 export const EventsGrid = styled.div`
     --columns: 5;
@@ -56,4 +58,24 @@ export const EventCardStyled = styled(Link)`
             background: #e0e0e0;
         }
     }
+`;
+
+export const EventItemStyled = styled(Link)`
+    width: 100%;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    color: #000;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: 0.2s background;
+
+    h4 {
+        font-weight: 300;
+    }
+
+    ${hover('#f0f0f0')}
+    ${active('#e0e0e0')}
 `;

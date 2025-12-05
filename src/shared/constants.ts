@@ -8,9 +8,65 @@ export const THEME = {
     theme: {},
 };
 
-export const PAYMENT_PLACES = {
-    Starbucks: 'Starbucks',
+import type { Suggestion } from './components/autocomplete-input/useSuggestionsFilter';
+import { LOGOS } from './icons/logos';
+import { convertToEnglishLayout } from './lib/keyboardLayout';
+
+export type PaymentPlace = {
+    displayValue: string; // Оригинальное название
+    transliteration?: string; // Транслитерация (если есть)
+    qwerty?: string; // Версия с английской раскладкой (если есть)
 };
+
+export const PAYMENT_PLACES: Suggestion[] = [
+    {
+        displayValue: 'Starbucks',
+        icon: LOGOS.Starbucks,
+        alternativeValues: ['Starbucks', 'Starbucks Coffee', 'Coffee'],
+    },
+    { displayValue: "McDonald's", icon: LOGOS["McDonald's"] },
+    { displayValue: 'KFC' },
+    { displayValue: 'Burger King' },
+    { displayValue: 'Subway' },
+    { displayValue: 'Pizza Hut' },
+    { displayValue: "Domino's Pizza" },
+    { displayValue: 'Taco Bell' },
+    { displayValue: 'Chipotle' },
+    { displayValue: "Dunkin'" },
+    { displayValue: 'Costa Coffee' },
+    {
+        displayValue: 'Теремок',
+        alternativeValues: ['Teremok', convertToEnglishLayout('Теремок')],
+    },
+    {
+        displayValue: 'Крошка Картошка',
+        alternativeValues: [
+            'Kroshka Kartoshka',
+            convertToEnglishLayout('Крошка Картошка'),
+        ],
+    },
+    {
+        displayValue: 'Ёлки-Палки',
+        alternativeValues: [
+            'Yolki-Palki',
+            convertToEnglishLayout('Ёлки-Палки'),
+        ],
+    },
+    {
+        displayValue: 'Шоколадница',
+        alternativeValues: [
+            'Shokoladnitsa',
+            convertToEnglishLayout('Шоколадница'),
+        ],
+    },
+    { displayValue: 'Coffee House', alternativeValues: ['Coffee House'] },
+    {
+        displayValue: 'Coffeeshop Company',
+        alternativeValues: ['Coffeeshop Company'],
+    },
+    { displayValue: 'Baskin-Robbins', alternativeValues: ['Baskin-Robbins'] },
+    { displayValue: 'Baskin Robbins', alternativeValues: ['Baskin Robbins'] },
+];
 
 export const CURRENCY = {
     RUB: { id: 'RUB', name: 'Рубль' },

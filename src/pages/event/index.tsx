@@ -1,16 +1,18 @@
 import {
     IconCashBanknoteFilled,
     IconPlus,
+    IconScan,
+    IconStarOff,
     IconUserCircle,
     IconUserPlus,
 } from '@tabler/icons-react';
 import { useStoreMap, useUnit } from 'effector-react';
-import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { $events } from '../../entities/event/model';
 import type { TFriend } from '../../entities/friends/model/types';
 import { $currentEventPayments } from '../../entities/payment/model';
-import { $events } from '../../entities/event/model';
+import { $isPlus } from '../../entities/user/model/subscription';
 import { AddFriendsToEventModal } from '../../feature/addFriendsToEventModal';
 import { CreatePaymentModal } from '../../feature/createPaymentModal';
 import { Avatar } from '../../shared/components/avatar';
@@ -20,13 +22,14 @@ import { Page } from '../../shared/components/page';
 import { Stub } from '../../shared/components/stub';
 import { CURRENCY } from '../../shared/constants';
 import { CURRENCY_ICON } from '../../shared/icons/currency';
+import { cn } from '../../shared/lib/classname';
 import { groupBy } from '../../shared/lib/groupBy';
 import { PaymentItem } from './PaymentItem';
 import {
-    PaymentListStyled,
     EventStatItem,
     EventStats,
     EventTitle,
+    PaymentListStyled,
 } from './styles';
 
 export const AvatarListStyled = styled.div`
@@ -59,19 +62,19 @@ export const SpecificEventPage = () => {
         keys: [id],
         fn: (events, [id]) => events.find((event) => event.id === id),
     });
-    const payments = useUnit($currentEventPayments);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isAddFriendsModalVisible, setIsAddFriendsModalVisible] =
-        useState(false);
-
-    const handleAddPayment = () => {
-        setIsModalVisible(true);
-    };
+    const [payments, isPlus] = useUnit([$currentEventPayments, $isPlus]);
 
     const groupedByDate = groupBy(payments, 'createdAt');
     const totalSpent = payments.reduce((acc, payment) => acc + payment.sum, 0);
 
-    if (!event) return <div>Событие не найдено</div>;
+    if (!event)
+        return (
+            <Stub
+                icon={<IconStarOff />}
+                title="Событие не найдено"
+                description="Такого события не существует"
+            />
+        );
 
     return (
         <Page
@@ -79,29 +82,31 @@ export const SpecificEventPage = () => {
             buttons={
                 <>
                     <Button
-                        className="primary rounded"
-                        onClick={handleAddPayment}
+                        className={cn('rounded', { plus: !isPlus })}
+                        disabled={!isPlus}
                     >
-                        <IconPlus />
-                        Добавить платеж
+                        <IconScan />
+                        Сканировать чек
                     </Button>
+                    <CreatePaymentModal>
+                        <Button className="primary rounded">
+                            <IconPlus />
+                            Добавить платеж
+                        </Button>
+                    </CreatePaymentModal>
                 </>
             }
         >
             <EventTitle>Участники</EventTitle>
             {!event.participants.length && (
-                <Button
-                    className="rounded"
-                    onClick={() => setIsAddFriendsModalVisible(true)}
-                >
-                    <IconUserPlus />
-                    Добавить участника
-                </Button>
+                <AddFriendsToEventModal>
+                    <Button className="rounded">
+                        <IconUserPlus />
+                        Добавить участника
+                    </Button>
+                </AddFriendsToEventModal>
             )}
-            <AddFriendsToEventModal
-                visible={isAddFriendsModalVisible}
-                onClose={() => setIsAddFriendsModalVisible(false)}
-            />
+
             <AvatarList friends={[]} />
             <Divider />
 
@@ -147,11 +152,6 @@ export const SpecificEventPage = () => {
                     />
                 )}
             </PaymentListStyled>
-
-            <CreatePaymentModal
-                visible={isModalVisible}
-                onClose={() => setIsModalVisible(false)}
-            />
         </Page>
     );
 };

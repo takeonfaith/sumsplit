@@ -12,7 +12,35 @@ export const AvatarStyled = styled.div`
     border-radius: 100%;
     aspect-ratio: 1 / 1;
     position: relative;
-    background: linear-gradient(135deg, #e3e3e3 0%, #adadad 100%);
+    z-index: 1;
+
+    .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #e3e3e3 0%, #adadad 100%);
+        border-radius: 100%;
+    }
+
+    &.plus {
+        .background {
+            outline: 2px solid #fff;
+        }
+
+        &::before {
+            content: '';
+            background: linear-gradient(to right, #f632cf, #ff2491);
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: calc(100% + 8px);
+            height: calc(100% + 8px);
+            border-radius: 100%;
+            z-index: 0;
+        }
+    }
 
     img {
         width: 100%;

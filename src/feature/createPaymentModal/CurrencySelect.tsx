@@ -33,7 +33,7 @@ export const CurrencySelect = () => {
             {Object.values(CURRENCY).map((currency) => (
                 <Button
                     key={currency.id}
-                    className="currency-item plane full start"
+                    className="currency-item clear full start"
                 >
                     <span className="icon">{CURRENCY_ICON[currency.id]}</span>
                     {currency.name}

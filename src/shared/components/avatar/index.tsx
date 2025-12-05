@@ -1,4 +1,5 @@
 import { cn } from '../../lib/classname';
+import { PlusBadge } from '../plus';
 import { AvatarStyled } from './styles';
 
 type Props = {
@@ -6,21 +7,23 @@ type Props = {
     name: string;
     size: TSize;
     icon?: React.ReactNode;
+    plus?: boolean;
     children?: React.ReactNode;
 };
 
 const getAbbr = (name: string) => {
     return name
         .split(' ')
-        .slice(0, 3)
+        .slice(0, 2)
         .map((word) => word[0])
         .join('');
 };
 
-export const Avatar = ({ src, name, size, icon, children }: Props) => {
+export const Avatar = ({ src, name, size, icon, children, plus }: Props) => {
     const abbr = getAbbr(name);
     return (
-        <AvatarStyled className={cn('avatar', {}, { [size]: size })}>
+        <AvatarStyled className={cn('avatar', { plus }, { [size]: size })}>
+            <div className="background"></div>
             {!!src && <img src={src} alt={name} />}
             {!icon && <span>{abbr}</span>}
             {icon && <div className="icon">{icon}</div>}

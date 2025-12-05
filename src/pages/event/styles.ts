@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { MEDIA_QUERIES } from '../../app/screen/constants';
+import { hover } from '../../shared/styles/hover';
+import { active } from '../../shared/styles/active';
 
 export const PaymentListStyled = styled.div`
     display: flex;
@@ -33,7 +35,7 @@ export const EventStats = styled.div`
     }
 `;
 
-export const PaymentItemStyled = styled.div`
+export const PaymentItemStyled = styled.button`
     width: 100%;
     height: fit-content;
     padding: 8px;
@@ -42,6 +44,16 @@ export const PaymentItemStyled = styled.div`
     gap: 12px;
     border-radius: 10px;
     cursor: pointer;
+    border: none;
+    background: transparent;
+    appearance: none; /* Disable the default arrow */
+    -webkit-appearance: none; /* For WebKit-based browsers */
+    -moz-appearance: none;
+    text-align: left;
+    transition: 0.2s background, 0.2s transform;
+
+    ${hover('#f0f0f0')}
+    ${active('#e0e0e0')}
 
     .money {
         color: #0c6cc3;

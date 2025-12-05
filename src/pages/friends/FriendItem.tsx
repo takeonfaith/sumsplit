@@ -1,7 +1,7 @@
 import { IconCircleCheckFilled } from '@tabler/icons-react';
 import type { TFriend } from '../../entities/friends/model/types';
-import { cn } from '../../lib/utils';
 import { Avatar } from '../../shared/components/avatar';
+import { cn } from '../../shared/lib/classname';
 import { FriendItemStyled } from './styles';
 
 type Props = {

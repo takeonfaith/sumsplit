@@ -269,8 +269,9 @@ export const createEffectorForm = <T extends TFormShape>(shape: T) => {
                 onSubmitFx.pending,
             ]);
 
-            const handleSubmit = () => {
-                console.log(validate);
+            const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                e.stopPropagation();
 
                 if (!submitForm) return;
 
@@ -320,7 +321,7 @@ export const createEffectorForm = <T extends TFormShape>(shape: T) => {
                 e: React.KeyboardEvent<HTMLInputElement>
             ) => {
                 if (e.key === 'Enter') {
-                    handleSubmit();
+                    handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
                 }
             };
 

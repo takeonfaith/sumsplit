@@ -7,13 +7,16 @@ import {
 import { useUnit } from 'effector-react';
 import styled from 'styled-components';
 import { $events } from '../../entities/event/model';
+import { AutocompleteInput } from '../../shared/components/autocomplete-input';
 import { Button } from '../../shared/components/button';
 import { Form } from '../../shared/components/form';
 import { Input } from '../../shared/components/input';
 import { Modal } from '../../shared/components/modal';
 import { Popup } from '../../shared/components/popup';
 import { Select } from '../../shared/components/select';
+import { PAYMENT_PLACES } from '../../shared/constants';
 import { CURRENCY_ICON } from '../../shared/icons/currency';
+import { LOGOS } from '../../shared/icons/logos';
 import { formatBigNumber } from '../../shared/lib/formatBigNumbers';
 import { ChooseWhoPaid } from './ChooseWhoPaid';
 import { CurrencySelect } from './CurrencySelect';
@@ -81,86 +84,96 @@ export const CreatePaymentBottom = styled.div`
 `;
 
 type Props = {
-    visible: boolean;
-    onClose: () => void;
+    children: React.ReactNode;
 };
 
-export const CreatePaymentModal = ({ visible, onClose }: Props) => {
+export const CreatePaymentModal = ({ children }: Props) => {
     const events = useUnit($events);
-    const { values, handleSubmit, onChange } = useForm({
+    const { values, handleSubmit, updateField, onChange } = useForm({
         submitForm: () => {},
     });
 
     return (
-        <Modal title="Добавить платеж" visible={visible} onClose={onClose}>
-            <CreatePaymentForm
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit();
-                }}
-            >
-                <Input
-                    value={values.name}
-                    type="text"
-                    id="name"
-                    placeholder="Название"
-                    onChange={onChange}
-                    autoFocus
-                    className="name-input clear"
-                />
-
-                <Input
-                    value={values.description}
-                    type="text"
-                    id="description"
-                    onChange={onChange}
-                    placeholder="Описание"
-                    className="description-input clear"
-                />
-                <SmallButtonsList>
-                    <Popup content={<PaymentSum />} closeOnClick={false}>
-                        <Button className="outline size-s plane">
-                            <IconCash />
-                            {values.sum ? formatBigNumber(values.sum) : 'Сумма'}
-                        </Button>
-                    </Popup>
-                    <Popup content={<CurrencySelect />}>
-                        <Button className="outline size-s plane">
-                            <span className="icon">{CURRENCY_ICON.RUB}</span>
-                            Валюта
-                        </Button>
-                    </Popup>
-                    <Popup content={<ChooseWhoPaid />}>
-                        <Button className="outline size-s plane">
-                            <IconUser />
-                            Кто платил
-                        </Button>
-                    </Popup>
-                    <Popup content={<WhenPaid />} closeOnClick={false}>
-                        <Button className="outline size-s plane">
-                            <IconClock />
-                            Время платежа
-                        </Button>
-                    </Popup>
-                </SmallButtonsList>
-                <CreatePaymentBottom>
-                    <label>
-                        <Select className="clear">
-                            <option value="" disabled selected>
-                                Выберите событие
-                            </option>
-                            {events.map((event) => (
-                                <option value={event.id}>
-                                    {event.name}
+        <Modal
+            title="Добавить платеж"
+            content={
+                <CreatePaymentForm onSubmit={handleSubmit}>
+                    <AutocompleteInput
+                        value={values.name ?? ''}
+                        id="name"
+                        placeholder="Название"
+                        onChange={(value) => updateField({ id: 'name', value })}
+                        autoFocus
+                        className="name-input"
+                        view="clear"
+                        suggestions={PAYMENT_PLACES}
+                        icon={
+                            LOGOS[(values.name ?? '') as keyof typeof LOGOS] ??
+                            null
+                        }
+                    />
+                    <Input
+                        value={values.description}
+                        type="text"
+                        id="description"
+                        onChange={onChange}
+                        placeholder="Описание"
+                        className="description-input clear"
+                    />
+                    <SmallButtonsList>
+                        <Popup content={<PaymentSum />} closeOnClick={false}>
+                            <Button className="outline size-s clear">
+                                <IconCash />
+                                {values.sum
+                                    ? formatBigNumber(values.sum)
+                                    : 'Сумма'}
+                            </Button>
+                        </Popup>
+                        <Popup content={<CurrencySelect />}>
+                            <Button className="outline size-s clear">
+                                <span className="icon">
+                                    {CURRENCY_ICON.RUB}
+                                </span>
+                                Валюта
+                            </Button>
+                        </Popup>
+                        <Popup content={<ChooseWhoPaid />}>
+                            <Button className="outline size-s clear">
+                                <IconUser />
+                                Кто платил
+                            </Button>
+                        </Popup>
+                        <Popup content={<WhenPaid />} closeOnClick={false}>
+                            <Button className="outline size-s clear">
+                                <IconClock />
+                                Время платежа
+                            </Button>
+                        </Popup>
+                    </SmallButtonsList>
+                    <CreatePaymentBottom>
+                        <label>
+                            <Select className="clear">
+                                <option value="" disabled selected>
+                                    Выберите событие
                                 </option>
-                            ))}
-                        </Select>
-                    </label>
-                    <Button type="submit" className="primary rounded square">
-                        <IconArrowUp />
-                    </Button>
-                </CreatePaymentBottom>
-            </CreatePaymentForm>
+                                {events.map((event) => (
+                                    <option value={event.id}>
+                                        {event.name}
+                                    </option>
+                                ))}
+                            </Select>
+                        </label>
+                        <Button
+                            type="submit"
+                            className="primary rounded square"
+                        >
+                            <IconArrowUp />
+                        </Button>
+                    </CreatePaymentBottom>
+                </CreatePaymentForm>
+            }
+        >
+            {children}
         </Modal>
     );
 };

@@ -64,41 +64,40 @@ export const CreatePaymentBottom = styled.div`
     }
 `;
 
-type Props = {
-    visible: boolean;
-    onClose: () => void;
-};
-
-export const CreateEventModal = ({ visible, onClose }: Props) => {
+export const CreateEventModal = ({
+    children,
+}: {
+    children: React.ReactNode;
+}) => {
     const { values, handleSubmit, onChange } = useForm({
         submitForm: () => {},
     });
 
     return (
-        <Modal title="Добавить событие" visible={visible} onClose={onClose}>
-            <CreatePaymentForm
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit();
-                }}
-            >
-                <Input
-                    value={values.name}
-                    type="text"
-                    id="name"
-                    placeholder="Название события"
-                    onChange={onChange}
-                    autoFocus
-                    autoComplete="off"
-                    className="name-input clear"
-                />
-                <CreatePaymentBottom>
-                    <Button type="submit" className="primary rounded full">
-                        <IconPlus />
-                        Добавить
-                    </Button>
-                </CreatePaymentBottom>
-            </CreatePaymentForm>
+        <Modal
+            title="Добавить событие"
+            content={
+                <CreatePaymentForm onSubmit={handleSubmit}>
+                    <Input
+                        value={values.name}
+                        type="text"
+                        id="name"
+                        placeholder="Название события"
+                        onChange={onChange}
+                        autoFocus
+                        autoComplete="off"
+                        className="name-input clear"
+                    />
+                    <CreatePaymentBottom>
+                        <Button type="submit" className="primary rounded full">
+                            <IconPlus />
+                            Добавить
+                        </Button>
+                    </CreatePaymentBottom>
+                </CreatePaymentForm>
+            }
+        >
+            {children}
         </Modal>
     );
 };

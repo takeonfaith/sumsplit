@@ -1,4 +1,4 @@
-import type { Expense, EventParticipant, Debt } from '@/types';
+import type { Expense, EventParticipant, Debt } from '@/shared/types';
 import { convertCurrency } from '@/services/currency';
 
 export async function calculateDebts(

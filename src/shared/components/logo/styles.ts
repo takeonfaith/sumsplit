@@ -5,7 +5,6 @@ export const LogoStyled = styled.div`
     height: 40px;
     display: flex;
     align-items: center;
-    justify-content: center;
     font-size: 24px;
     font-weight: 800;
     color: #000;

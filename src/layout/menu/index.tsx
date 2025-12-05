@@ -1,62 +1,56 @@
-import {
-    IconFolders,
-    IconFriends,
-    IconHome,
-    IconPlus,
-} from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 import { useUnit } from 'effector-react';
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { routes } from '../../app/routes';
 import { $isMobile } from '../../app/screen';
+import { CreatePaymentModal } from '../../feature/createPaymentModal';
 import { Button } from '../../shared/components/button';
 import { Logo } from '../../shared/components/logo';
-import { MenuList, MenuStyled } from './styles';
-import { CreatePaymentModal } from '../../feature/createPaymentModal';
+import { EventsList } from './EventsList';
+import { ProfileButton } from './ProfileButton';
+import { MenuBottom, MenuList, MenuStyled } from './styles';
+import { SubscriptionPromo } from './SubscriptionPromo';
+
+const getMenuItems = (paths: string[]) => {
+    return routes.filter((route) => paths.includes(route.url));
+};
+
+const menuItems = getMenuItems(['', 'events', 'friends', 'statistics']);
+
+console.log(menuItems);
 
 export const Menu = () => {
     const isMobile = useUnit($isMobile);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    if (isMobile) return null;
 
     return (
         <MenuStyled>
             <Logo />
             <MenuList>
-                <Button
-                    as={NavLink}
-                    to="/"
-                    className="vertical-on-mobile full start"
-                >
-                    <IconHome />
-                    Главная
-                </Button>
-                <Button
-                    as={NavLink}
-                    to="/events"
-                    className="vertical-on-mobile full start"
-                >
-                    <IconFolders />
-                    События
-                </Button>
-                <Button
-                    as={NavLink}
-                    to="/friends"
-                    className="vertical-on-mobile full start"
-                >
-                    <IconFriends />
-                    Друзья
-                </Button>
+                {menuItems.map((route) => (
+                    <Button
+                        key={route.url}
+                        as={NavLink}
+                        to={route.url}
+                        className="vertical-on-mobile full start"
+                    >
+                        <div className="icon">{route.icon}</div>
+                        {route.name}
+                    </Button>
+                ))}
             </MenuList>
-            <Button
-                onClick={() => setIsModalVisible(true)}
-                className="create-event-btn primary rounded full"
-            >
-                <IconPlus />
-                {!isMobile && 'Добавить платеж'}
-            </Button>
-            <CreatePaymentModal
-                visible={isModalVisible}
-                onClose={() => setIsModalVisible(false)}
-            />
+            <CreatePaymentModal>
+                <Button className="create-event-btn primary rounded full">
+                    <IconPlus />
+                    {!isMobile && 'Добавить платеж'}
+                </Button>
+            </CreatePaymentModal>
+            <EventsList />
+            <MenuBottom>
+                <SubscriptionPromo />
+                <ProfileButton />
+            </MenuBottom>
         </MenuStyled>
     );
 };

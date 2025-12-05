@@ -6,7 +6,7 @@ export const LayoutStyled = styled.div`
     display: flex;
 
     @media (max-width: 768px) {
-        flex-direction: column-reverse;
+        flex-direction: column;
     }
 `;
 
